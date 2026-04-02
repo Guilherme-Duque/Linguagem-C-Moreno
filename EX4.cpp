@@ -9,12 +9,12 @@ int main () {
 	vet = (int*)calloc(5, 4/*sizeof(int)*/);
 	
 	do {
-		printf("Escreva a merda do seu número inteiro: ");
+		printf("Escreva a merda do seu nÃºmero inteiro: ");
 		scanf("%d", &num);
 		
 		if (num >= 0){
 			tam++;
-			if(tam == max) {
+			if(tam > max) {
 				max *= 2;
 				vet = (int*)realloc(vet,max*4/*sizeof(int)*/);
 			}
@@ -27,7 +27,7 @@ int main () {
 	} while(num >= 0);
 	
 	for(int i = 0 ; i < max; i++) {
-		printf("%d° número: %d\n",i + 1, *(vet + i));
+		printf("%dÂ° nÃºmero: %d\n",i + 1, *(vet + i));
 	}		
 	system("pause");
 		
