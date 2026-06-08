@@ -20,6 +20,7 @@ Materiais: Materiais: https://drive.google.com/drive/folders/1rN5JbC5E1Vu1mchc57
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <time.h>
 
 typedef struct apelido{
 	int valor;
@@ -30,11 +31,15 @@ void pause();
 void inserirInicio(int num);
 int perguntaNum(int op);
 void inserirFim(int num);
+void imprimir();
 void remover(int num);
+void inserirMeio (int ant, int num);
+void inserir10();
 
 no *lista;
 
 int main(){
+	srand(time(NULL));
 	setlocale(LC_ALL, "Portuguese");
 	int op;
 	do{
@@ -48,18 +53,19 @@ int main(){
 		printf("6 - Remover elemento\n");
 		printf("7 - Sair\n");
 		scanf("%d", &op);
+		limpaTela();
 		switch(op){
 			case 1:
 				inserirInicio(perguntaNum(1));
 				break;
 			case 2:
-				//inserirMeio(x);
+				inserirMeio(perguntaNum(3), perguntaNum(1));
 				break;
 			case 3:
 				inserirFim(perguntaNum(1));
 				break;
 			case 4:
-				//inserir10();
+				inserir10();
 				break;
 			case 5:
 				imprimir();
@@ -101,7 +107,10 @@ int perguntaNum(int num){
 		break;
 		case 2:
 			printf("Valor para remover na lista: ");	
-		break;		
+		break;	
+		case 3:
+			printf("Deseja inserir após qual número? ");	
+		break;	
 	}
 	scanf("%d", &valor);
 	return valor;
@@ -137,13 +146,75 @@ void imprimir(){
 	pause();
 }
 
-void remover(int num){
-	no *anterior, *atual = lista;
-	while(atual && atual->valor != num){
-		
+void remover(int num) {
+	//Da pra melhorar, se houver repetição, remover todos, escolher qual remover
+	if (lista == NULL) {
+		printf("Lista vazia. Nada a remover.\n");
+		return;
+		}
+	no *atual = lista;
+	no *anterior = NULL;
+	while (atual != NULL && atual->valor != num) {
+	anterior = atual;
+	atual = atual->proximo;}
+	if (atual == NULL) { 
+		printf("Valor não encontrado na lista. Nada a remover.\n");
+		return;
+		}
+	if (anterior == NULL) {
+		lista = atual->proximo;
+		free (atual);
+	} else {
+		anterior->proximo = atual->proximo;
+		free (atual);
+		}
+	printf("Valor %d removido da lista.\n", num);
+	pause();
+}
+
+void inserirMeio (int ant, int num){
+	no *aux, *novo=malloc(sizeof(no));
+	if (novo) {
+		novo->valor=num;
+		if (lista==NULL) {
+		novo->proximo=NULL;
+		lista=novo;
+		}else{
+		aux=lista;
+		while(aux->valor != ant && aux->proximo)
+		aux=aux->proximo;
+		novo->proximo=aux->proximo;
+		aux->proximo=novo;
+		}	
+	} else{
+		printf("Erro ao alocar memoria \n");
+		pause();
 	}
 }
 
+void inserir10(){
+	int escolha, num, i, ant;
+	for(i = 0; i < 10; i++){
+		escolha = rand() % 3 + 1;
+		num = rand() % 100;
+		switch (escolha){
+			case 1:
+				inserirInicio(num);
+			break;
+			case 2:
+				//Da pra melhorar, considerar apenas os números já inseridos
+				ant = rand() % 100;
+				inserirMeio(ant, num);
+			break;
+			case 3:
+				inserirFim(num);
+			break;
+		}
+	}
+	printf("10 Valores aleatórios inseridos\n");
+	pause();
+	
+}
 
 
 
